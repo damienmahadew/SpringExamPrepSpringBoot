@@ -126,4 +126,114 @@ package za.co.mahadew.damien.notes;
  *              </exclusions>
  *              And add dependency for jetty
  *
+ *   Why run a web application outside of a container
+ *      -no separation of container config and app config
+ *          they depend on each other anyway
+ *      -apps mostly target to a specific container
+ *      -easier debugging and profiling
+ *      -easier hot code replacement
+ *      -no special ide support
+ *      -familiar model for non-java develoeprs
+ *      recommended for cloud native applications
+ *
+ *   Packaging
+ *      -Spring boot creates a single archive
+ *          -jar or war
+ *          - can also include the application
+ *     - can be executed with java -jar yourapp.war
+ *     -gradle/maven plugins available
+ *
+ *     add boot maven plugin to pom.xml
+ *      <build>
+ *          <plugins>
+ *              <plugin>
+ *                  <groupId>org.springframework.boot</groupId>
+ *                  <artifactId>spring-boot-maven-plugin</artifactId>
+ *              </plugin>
+ *          </plugins>
+ *      </build>
+ *
+ *
+ *      mvn package -> procudes jar + jar.original
+ *      jar.original contains only your code
+ *      jar contains application server
+ *
+ *
+ *  Spring Boot inside a servlet container
+ *      -spring boot can also run in any Servlet 3.x container
+ *          -e.g. Tomcat 7+, Jetty 8+
+ *          -only small changes required
+ *              -change artifact to type WAR
+ *              -extend SpringBootServletInitializer
+ *              -override configure method
+ *          -still no web.xml
+ *
+ *  Spring boot war file
+ *      -hybrid WAR file
+ *      -can still be executed with embedded tomcat (java -jar app.war)
+ *      -traditional WAR file is produced as well
+ *          -without tomcat
+ *          -just drop it in your application server web app directory
+ *          - need to change the <packagin>war</packagin> in maven pom file
+ *  Your Choice:
+ *      There is no force to go to containerless
+ *          embedded container is just one feature of spring
+ *       traditional WAR also benefits a lot from Spring boot
+ *          automatic spring mvc setup, including dispatcher servlet
+ *          sensible defualts based on the classpath content
+ *          embedded container can be used during development
+ *
+ *  Externalized properties
+ *      file : application.properties
+ *
+ *      Developers commonly externalize properties to files
+ *          easily consumable via spring PropertySource
+ *          but developers name /locate their files in different ways
+ *      Spring boot automatically looks for application.properties
+ *      in the classpath root
+ *
+ *      e.g.
+ *      database.host=localhost
+ *
+ *      Starter POM's declare the properties to be used
+ *
+ *    Options
+ *      You can override the location of this file
+ *          e.g. change it to myserver.properties
+ *          see {@link za.co.mahadew.damien.SpringExamPrepSpringBootApplicationWithWar}
+ *
+ *    YAML
+ *      Spring boot also supports YAML configuration
+ *          more concise, indented text format (similar to JSON)
+ *      By default it looks for application.yml
+ *      e.g
+ *          database:
+ *              host: localhost
+ *              user: admin
+ *      ** Do not use tabs
+ *
+ *      see application.properties for examples
+ *
+ *
+ *  Web Application Convenience
+ *      Boot automatically configures Spring MVC Dispatcher servlet and @EnableWebMvc defaults
+ *          when spring-webmvc.jar is on classpath
+ *      Static resources reserved from classpath
+ *          /static /public /resources or /META-INF/resources
+ *      Templates served from /templates
+ *          when velocity, freemarker, thymeleaf or Groovy on classpath
+ *      Provides default /error mapping
+ *          easily overriden
+ *
+ *   Summary
+ *      Spring boot speeds up spring application development
+ *      You always have full control and insight
+ *      nothing is generated
+ *      no special runtime requirements
+ *      no servlet container needed
+ *          ideal for micorservices
+ *
+ *
+ *
+ *
  */
